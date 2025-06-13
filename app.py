@@ -21,7 +21,7 @@ def jard():
 
 
 @app.route("/test")
-def jard():
+def test():
     jard = Jard()
 
     result = jard.slide_window(
