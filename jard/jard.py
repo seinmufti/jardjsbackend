@@ -24,49 +24,54 @@ class Jard:
             w = structure["w"]
             h = structure["h"]
             structural_blueprint = STRUCTURAL_BLUEPRINTS[structure["strbluprnt"]]
-            structures_total_area += w * h
+            quantity = structure.get("quantity", 1)
 
-            for part, info in structural_blueprint.items():
-                part_count = info["count"]
+            for _ in range(quantity):
+                structures_total_area += w * h
 
-                # Calculate accessories
-                for accessory, accessory_count in info["accessories counts"].items():
-                    total_accessory_count = accessory_count * part_count
-                    structures_total_accessories_counts[accessory] = (
-                        structures_total_accessories_counts.get(accessory, 0)
-                        + total_accessory_count
+                for part, info in structural_blueprint.items():
+                    part_count = info["count"]
+
+                    # Calculate accessories
+                    for accessory, accessory_count in info[
+                        "accessories counts"
+                    ].items():
+                        total_accessory_count = accessory_count * part_count
+                        structures_total_accessories_counts[accessory] = (
+                            structures_total_accessories_counts.get(accessory, 0)
+                            + total_accessory_count
+                        )
+
+                        accessory_cost = PRICES[accessory]["price"]
+                        accessory_total_cost = accessory_cost * total_accessory_count
+                        structures_total_cost += accessory_total_cost
+
+                    # Calculate tubes
+                    tube = info["tube"]
+                    total_tube_length = calculate_tube_length(
+                        w,
+                        h,
+                        info["dimension counts"],
+                        info["dimension ratios"],
+                        info["count"],
                     )
 
-                    accessory_cost = PRICES[accessory]["price"]
-                    accessory_total_cost = accessory_cost * total_accessory_count
-                    structures_total_cost += accessory_total_cost
+                    tube_count = calculate_tube_count(total_tube_length, tube)
+                    structures_total_tubes_counts[tube] = (
+                        structures_total_tubes_counts.get(tube, 0) + tube_count
+                    )
 
-                # Calculate tubes
-                tube = info["tube"]
-                total_tube_length = calculate_tube_length(
-                    w,
-                    h,
-                    info["dimension counts"],
-                    info["dimension ratios"],
-                    info["count"],
+                    # Calculate aluminum cost
+                    structure_total_weight = calculate_aluminum_weight(
+                        total_tube_length, tube
+                    )
+                    aluminum_kg_cost = PRICES["aluminum kg"]
+                    structures_total_cost += aluminum_kg_cost * structure_total_weight
+
+                # Add workerfee
+                structures_total_cost += calculate_workerfee(
+                    w, h, WORKERFEE_PER_METER_SQUARED, CM2_TO_M2_CONVERSION_FACTOR
                 )
-
-                tube_count = calculate_tube_count(total_tube_length, tube)
-                structures_total_tubes_counts[tube] = (
-                    structures_total_tubes_counts.get(tube, 0) + tube_count
-                )
-
-                # Calculate aluminum cost
-                structure_total_weight = calculate_aluminum_weight(
-                    total_tube_length, tube
-                )
-                aluminum_kg_cost = PRICES["aluminum kg"]
-                structures_total_cost += aluminum_kg_cost * structure_total_weight
-
-            # Add workerfee
-            structures_total_cost += calculate_workerfee(
-                w, h, WORKERFEE_PER_METER_SQUARED, CM2_TO_M2_CONVERSION_FACTOR
-            )
 
         # Prepare outputs
         output_en = {
