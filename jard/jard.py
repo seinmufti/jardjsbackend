@@ -69,16 +69,14 @@ class Jard:
             )
 
         # Prepare outputs
-        output_en = [
-            {"Structs total accessories counts": structures_total_accessories_counts},
-            {"Structs total tubes counts": structures_total_tubes_counts},
-            {
-                "Structs total area": round(
-                    (structures_total_area) / CM2_TO_M2_CONVERSION_FACTOR, 2
-                )
-            },
-            {"Structs total cost": round(structures_total_cost, 2)},
-        ]
+        output_en = {
+            "Structs total accessories counts": structures_total_accessories_counts,
+            "Structs total tubes counts": structures_total_tubes_counts,
+            "Structs total area": round(
+                (structures_total_area) / CM2_TO_M2_CONVERSION_FACTOR, 2
+            ),
+            "Structs total cost": round(structures_total_cost, 2),
+        }
 
         output_kr = get_kurdish_output(
             structures_total_accessories_counts,
