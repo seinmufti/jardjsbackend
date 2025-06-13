@@ -20,7 +20,7 @@ def jard():
     return jsonify({"result": result})
 
 
-@app.route("/jard", methods=["POST"])
+@app.route("/test")
 def jard():
     jard = Jard()
 
