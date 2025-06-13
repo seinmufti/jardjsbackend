@@ -20,6 +20,18 @@ def jard():
     return jsonify({"result": result})
 
 
+@app.route("/jard", methods=["POST"])
+def jard():
+    jard = Jard()
+
+    result = jard.slide_window(
+        [
+            {"strbluprnt": "slide window", "w": 149.5, "h": 175.7},
+        ]
+    )
+    return jsonify({"result": result})
+
+
 if __name__ == "__main__":
     # app.run(debug=True)
     app.run()
